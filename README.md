@@ -12,7 +12,7 @@
 
 #### Part 2: Optimize Frames per Second in pizza.html
 
-* Number of pizzas in background is calculated according to the screen height.
+* The number of sliding pizzas is recalculated according to the screen height.
 * Replaced ```querySelector``` by ```getElement```.
 * Change the ```.mover``` class in CSS file.
 * Moved few variables out of resizePizzas() function.
