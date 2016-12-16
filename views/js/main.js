@@ -424,9 +424,10 @@ var resizePizzas = function(size) {
     window.performance.mark("mark_start_resize"); // User Timing API function
 
     // Changes the value for the size of the pizza above the slider
-    var pizzaSize = document.querySelector('#pizzaSize');
+
 
     function changeSliderLabel(size) {
+        var pizzaSize = document.getElementById("pizzaSize");
         switch (size) {
             case "1":
                 pizzaSize.innerHTML = "Small";
@@ -438,37 +439,40 @@ var resizePizzas = function(size) {
                 pizzaSize.innerHTML = "Large";
                 return;
             default:
-                console.log("bug in changeSliderLabel");
+                console.log("error in changeSliderLabel");
         }
     }
 
     changeSliderLabel(size);
 
-
+    var randomPizzas = document.getElementById("randomPizzas");
+    var randomPizzaOffset;
+    var randomPizzaContainer;
+    var rLength;
 
     // Iterates through pizza elements on the page and changes their widths
     function changePizzaSizes(size) {
-        var newwidth = 0;
+        var newSize = 0;
         switch (size) {
             case "1":
-                newwidth = 25 + "%";
+                newSize = 25 + "%";
                 break;
             case "2":
-                newwidth = 33 + "%";
+                newSize = 33 + "%";
                 break;
             case "3":
-                newwidth = 50 + "%";
+                newSize = 50 + "%";
                 break;
             default:
-                console.log("error in sizeSwitcher");
-                break;
+                console.log("error");
         }
-        var randomPizzaContainer = document.getElementByClassName("randomPizzaContainer");
+        var randomPizzaContainer = document.getElementsByClassName("randomPizzaContainer");
         for (var i = 0; i < randomPizzaContainer.length; i++) {
-            randomPizzaContainer[i].style.width = newwidth;
+            randomPizzaContainer[i].style.width = newSize;
         }
     }
     changePizzaSizes(size);
+
     // User Timing API is awesome
     window.performance.mark("mark_end_resize");
     window.performance.measure("measure_pizza_resize", "mark_start_resize", "mark_end_resize");
@@ -509,15 +513,15 @@ function logAverageFrame(times) { // times is the array of User Timing measureme
 function updatePositions() {
     frame++;
     window.performance.mark("mark_start_frame");
-    var items = document.getElementByClassName('.mover');
+    var items = document.getElementsByClassName('mover');
     var scr = scroll / 1250;
     var phase = [];
     for (var i = 0; i < 10; i++) {
-        phase[i] = Math.sin(scr + i);
+        phase[i] = 100 * Math.sin(scr + i);
     }
 
     for (i = 0; i < items.length; i++) {
-        items[i].style.left = items[i].basicLeft + 100 * phase[i % 5] + 'px';
+        items[i].style.transform = "translateX(" + phase[i % 5] + 'px';
     }
     // User Timing API to the rescue again. Seriously, it's worth learning.
     // Super easy to create custom metrics.
@@ -530,10 +534,9 @@ function updatePositions() {
 }
 
 // runs updatePositions on scroll
-window.addEventListener('scroll', updatePositions);
 var scroll;
 var click = false;
-window.addEventListener('scroll', function(x) {
+window.addEventListener('scroll', function(e) {
     scroll = window.scrollY;
     if (!click) {
         window.requestAnimationFrame(function() {
@@ -548,7 +551,7 @@ document.addEventListener('DOMContentLoaded', function() {
     var cols = 8;
     var s = 256;
     var rows = Math.round(window.screen.height / s + 1);
-    var movingPizzas = doucument.getElementById("movingPizzas1");
+    var movingPizzas = document.getElementById("movingPizzas1");
     for (var i = 0; i < rows * cols; i++) {
         var elem = document.createElement('img');
         elem.className = 'mover';
@@ -560,5 +563,6 @@ document.addEventListener('DOMContentLoaded', function() {
         elem.style.top = (Math.floor(i / cols) * s) + 'px';
         movingPizzas.appendChild(elem);
     }
+
     updatePositions();
 });
